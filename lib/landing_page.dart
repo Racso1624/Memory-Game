@@ -1,5 +1,3 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LandingPage extends StatefulWidget{
@@ -10,8 +8,25 @@ class LandingPage extends StatefulWidget{
 class _LandingPageState extends State<LandingPage>{
   @override
   Widget build(BuildContext context){
-    return Container(
-      
+    return Scaffold(
+      // body is the majority of the screen.
+      body: Container(
+        alignment: Alignment(0.5, -0.5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Welcome To The Memory Game',
+              style: TextStyle(
+                fontSize: 50,
+                color: Colors.green,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            ElevatedButton(onPressed: (){}, child: Text('HOLA'),),
+          ]
+        ),
+      ),
     );
   }
 }
