@@ -10,22 +10,30 @@ class _LandingPageState extends State<LandingPage>{
   Widget build(BuildContext context){
     return Scaffold(
       // body is the majority of the screen.
-      body: Container(
-        alignment: Alignment(0.5, -0.5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome To The Memory Game',
-              style: TextStyle(
-                fontSize: 50,
-                color: Colors.green,
+      body: Column(
+        children: [
+          Column(
+            children: [
+              Container(
+                alignment: Alignment(0.5, 0.5),
+                child: 
+                  Text(
+                      'Welcome To The Memory Game',
+                      style: TextStyle(
+                        fontSize: 50,
+                        color: Colors.green,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
               ),
-              textAlign: TextAlign.center,
-            ),
-            ElevatedButton(onPressed: (){}, child: Text('HOLA'),),
-          ]
-        ),
+              Container(
+                alignment: Alignment(0, -0.5),
+                child: 
+                  ElevatedButton(onPressed: (){}, child: Text('HOLA'),),
+              )
+            ]
+          ),
+        ],
       ),
     );
   }
