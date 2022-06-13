@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memory_game/landing_page.dart';
 
 void main() {
@@ -18,6 +19,7 @@ class MyAppState extends State<MyApp>{
   Widget build (BuildContext context){
     return MaterialApp(
       title: 'Memory Game',
+      theme: ThemeData(textTheme: GoogleFonts.robotoMonoTextTheme()),
       home: LandingPage(),
     );
   }
