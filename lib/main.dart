@@ -20,6 +20,7 @@ class MyAppState extends State<MyApp>{
     return MaterialApp(
       title: 'Memory Game',
       theme: ThemeData(textTheme: GoogleFonts.robotoMonoTextTheme()),
+      debugShowCheckedModeBanner: false,
       home: LandingPage(),
     );
   }

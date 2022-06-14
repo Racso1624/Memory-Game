@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_game/game_page.dart';
 
 class LandingPage extends StatefulWidget{
   @override
@@ -21,7 +22,7 @@ class _LandingPageState extends State<LandingPage>{
                     'Welcome To The Memory Game',
                     style: TextStyle(
                       fontSize: 50,
-                      color: Colors.green,
+                      color: Colors.white,
                     ),
                     textAlign: TextAlign.center,
                 ),
@@ -30,16 +31,24 @@ class _LandingPageState extends State<LandingPage>{
                 alignment: Alignment(0, 0.2),
                 child: 
                   ElevatedButton(
-                    onPressed: (){}, 
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => GamePage()));
+                    }, 
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.green[800]),
+                      backgroundColor: MaterialStateProperty.all(Colors.cyan[600]),
                     ), 
-                    child: Text('Start Game'),
+                    child: Text(
+                      'Start Game',
+                      style: TextStyle(
+                        fontSize: 30,
+                      ),
+                    ),
                   ),
               )
             ]
           ),
       ),
+      backgroundColor: Colors.black,
     );
   }
 }
