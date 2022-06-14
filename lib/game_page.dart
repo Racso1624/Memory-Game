@@ -84,21 +84,3 @@ class _GamePageState extends State<GamePage>{
     );
   }
 }
-
-// child:
-//           Stack(
-//             children: [
-//               Align(
-//                 alignment: Alignment(0.5, -0.8),
-//                 child: 
-//                   Text(
-//                     'Let\'s Play The Game',
-//                     style: TextStyle(
-//                       fontSize: 40,
-//                       color: Colors.white,
-//                     ),
-//                     textAlign: TextAlign.center,
-//                 ),
-//               ),
-//             ]
-//           ),
