@@ -43,6 +43,9 @@ class _GamePageState extends State<GamePage>{
   "images/covers/dawnfm.jpg", "images/covers/starboy.jpg","images/covers/cmiygl.png", "images/covers/astroworld.webp"];
   
   var cardsList = mixList(linksList);
+  var score = 0;
+  var tries = 0;
+  var cardflipId = null;
 
   @override
   Widget build(BuildContext context){
@@ -61,7 +64,29 @@ class _GamePageState extends State<GamePage>{
               textAlign: TextAlign.center,
           ),
           SizedBox(
-            height: 50,
+            height: 20,
+          ),
+          Wrap(
+            spacing: 25,
+            children: [
+              Text(
+                "Score: $score",
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                "Tries: $tries",
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 20,
           ),
           Expanded(
             child: GridView.count(
@@ -74,6 +99,14 @@ class _GamePageState extends State<GamePage>{
                 return FlipCard(
                   front: Image.asset("images/icon/vinyl.jpg"),
                   back: Image.asset(image),
+                  onFlip: (){
+                    cardflipId = cardId;
+                    print("$cardflipId");
+                    setState(() {
+                      score++;
+                    });
+                  },
+                  
                 );
               }),
             ),
