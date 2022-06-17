@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +8,14 @@ class GamePage extends StatefulWidget{
   State<GamePage> createState() => _GamePageState();
 }
 
-int countItems(List<dynamic> list, String element) {
+int countItems(List<dynamic> list, int element) {
   if (list == null || list.isEmpty) {
     return 0;
   }
 
   int count = 0;
   for (int i = 0; i < list.length; i++) {
-    if (list[i][0] == element) {
+    if (list[i][1] == element) {
       count++;
     }
   }
@@ -22,30 +23,80 @@ int countItems(List<dynamic> list, String element) {
   return count;
 }
 
-List<dynamic> mixList(links){
-  Random random = Random();
-  var cardsList = [];
+const linksList = ["images/covers/igor.jpg", "images/covers/flowerboy.jpg","images/covers/afterhours.jpg", "images/covers/blonde.jpg",
+"images/covers/dawnfm.jpg", "images/covers/starboy.jpg","images/covers/cmiygl.png", "images/covers/astroworld.webp"];
+const coverCard = "images/icon/vinyl.jpg";
 
-  while (cardsList.length != 16) {
+List<dynamic> imagesInit(){
+
+  var list = [];
+
+  Random random = Random();
+  
+  while(list.length != 16){
     final randomNumber = random.nextInt(8);
-    final item = links[randomNumber];
-    if(countItems(cardsList, item) != 2){
-      cardsList.add([item, randomNumber]);
+    if(countItems(list, randomNumber) != 2){
+      list.add([coverCard, randomNumber]);
     }
   }
 
-  return cardsList;
+  return list;
 }
 
 class _GamePageState extends State<GamePage>{
 
-  static const linksList = ["images/covers/igor.jpg", "images/covers/flowerboy.jpg","images/covers/afterhours.jpg", "images/covers/blonde.jpg",
-  "images/covers/dawnfm.jpg", "images/covers/starboy.jpg","images/covers/cmiygl.png", "images/covers/astroworld.webp"];
-  
-  var cardsList = mixList(linksList);
+  var imagesList = imagesInit();
+
+  @override
+  void initState() {
+    imagesInit();
+  }
+
   var score = 0;
   var tries = 0;
-  var cardflipId = null;
+  var selectedCard = [];
+  var cardsFound = [];
+
+  void updateImage(index, id){
+    if(imagesList[index][0] != linksList[id]){
+      imagesList[index][0] = linksList[id];
+    }
+    else{
+      imagesList[index][0] = "images/icon/vinyl.jpg";
+    }
+  }
+  
+  Future<void> gameFunction(index, cardId){
+    return Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        if(selectedCard.length == 0){
+        selectedCard.add(index);
+        selectedCard.add(cardId);
+        }
+        else{
+          if(selectedCard[1] == cardId){
+            cardsFound.add(index);
+            cardsFound.add(selectedCard[0]);
+            selectedCard = [];
+            score++;
+          }
+          else{
+            updateImage(index, cardId);
+            updateImage(selectedCard[0], selectedCard[1]);
+            selectedCard = [];
+            tries++;
+          }
+        }
+
+        if(score == 8){
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => _buildPopupDialog(context),
+          );
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context){
@@ -93,20 +144,21 @@ class _GamePageState extends State<GamePage>{
               crossAxisCount: 4,
               mainAxisSpacing: 1,
               crossAxisSpacing: 1,
-              children: List.generate(cardsList.length, (index) {
-                final image = cardsList[index][0];
-                final cardId = cardsList[index][1];
-                return FlipCard(
-                  front: Image.asset("images/icon/vinyl.jpg"),
-                  back: Image.asset(image),
-                  onFlip: (){
-                    cardflipId = cardId;
-                    print("$cardflipId");
-                    setState(() {
-                      score++;
-                    });
-                  },
-                  
+              children: List.generate(imagesList.length, (index) {
+                final image = imagesList[index][0];
+                final cardId = imagesList[index][1];
+                return Card(
+                  child: InkWell(
+                    child: Container(
+                      child: Image.asset(image),
+                    ),
+                    onTap: () {
+                      setState(() {
+                        updateImage(index, cardId);
+                        gameFunction(index, cardId);
+                      });
+                    },
+                  )
                 );
               }),
             ),
@@ -116,4 +168,22 @@ class _GamePageState extends State<GamePage>{
       backgroundColor: Colors.black,
     );
   }
+}
+
+Widget _buildPopupDialog(BuildContext context) {
+  return new AlertDialog(
+    title: const Text('Felicidades, Has Ganado'),
+    content: new Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+    ),
+    actions: <Widget>[
+      new TextButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: const Text('Cerrar'),
+      ),
+    ],
+  );
 }
