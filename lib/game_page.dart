@@ -27,35 +27,29 @@ const linksList = ["images/covers/igor.jpg", "images/covers/flowerboy.jpg","imag
 "images/covers/dawnfm.jpg", "images/covers/starboy.jpg","images/covers/cmiygl.png", "images/covers/astroworld.webp"];
 const coverCard = "images/icon/vinyl.jpg";
 
-List<dynamic> imagesInit(){
 
-  var list = [];
-
-  Random random = Random();
-  
-  while(list.length != 16){
-    final randomNumber = random.nextInt(8);
-    if(countItems(list, randomNumber) != 2){
-      list.add([coverCard, randomNumber]);
-    }
-  }
-
-  return list;
-}
 
 class _GamePageState extends State<GamePage>{
 
-  var imagesList = imagesInit();
-
-  @override
-  void initState() {
-    imagesInit();
-  }
-
+  var imagesList = [];
   var score = 0;
   var tries = 0;
   var selectedCard = [];
   var cardsFound = [];
+  
+  @override
+  void initState() {
+    gameInit();
+  }
+
+  void gameInit(){
+    score = 0;
+    tries = 0;
+    selectedCard = [];
+    cardsFound = [];
+    imagesList = [];
+    imagesInit();
+  }
 
   void updateImage(index, id){
     if(imagesList[index][0] != linksList[id]){
@@ -63,6 +57,18 @@ class _GamePageState extends State<GamePage>{
     }
     else{
       imagesList[index][0] = "images/icon/vinyl.jpg";
+    }
+  }
+
+  void imagesInit(){
+
+    Random random = Random();
+    
+    while(imagesList.length != 16){
+      final randomNumber = random.nextInt(8);
+      if(countItems(imagesList, randomNumber) != 2){
+        imagesList.add([coverCard, randomNumber]);
+      }
     }
   }
   
@@ -74,9 +80,8 @@ class _GamePageState extends State<GamePage>{
         selectedCard.add(cardId);
         }
         else{
-          if(selectedCard[1] == cardId){
-            cardsFound.add(index);
-            cardsFound.add(selectedCard[0]);
+          if(selectedCard[1] == cardId && selectedCard[0] != index){
+            cardsFound.add(selectedCard[1]);
             selectedCard = [];
             score++;
           }
@@ -153,10 +158,12 @@ class _GamePageState extends State<GamePage>{
                       child: Image.asset(image),
                     ),
                     onTap: () {
-                      setState(() {
-                        updateImage(index, cardId);
-                        gameFunction(index, cardId);
-                      });
+                      if(!cardsFound.contains(cardId)){
+                        setState(() {
+                          updateImage(index, cardId);
+                          gameFunction(index, cardId);
+                        });
+                      }
                     },
                   )
                 );
@@ -172,18 +179,31 @@ class _GamePageState extends State<GamePage>{
 
 Widget _buildPopupDialog(BuildContext context) {
   return new AlertDialog(
-    title: const Text('Felicidades, Has Ganado'),
-    content: new Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-    ),
-    actions: <Widget>[
-      new TextButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        child: const Text('Cerrar'),
+    title: const Text(
+      'Felicidades, Has Ganado', 
+      textAlign: TextAlign.center, 
+      style: TextStyle(
+        fontSize: 25,
+        color: Colors.white,
       ),
+    ),
+    backgroundColor: Colors.cyan[600],
+    actions: <Widget>[
+      new Align(
+        child: TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text(
+            'Jugar de Nuevo',
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      )
     ],
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
   );
 }
